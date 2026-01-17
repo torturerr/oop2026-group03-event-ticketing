@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-public class DatabaseConnection {
+public class PostgresDatabase {
     private static final String URL =
             "jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:5432/postgres?user=postgres.qrrtpdmvgzqotlfxdmjy&password=sisimasisi229";
     private static final String USER = "postgres";
@@ -24,7 +24,7 @@ public class DatabaseConnection {
             throw new RuntimeException("Cannot load DB_PASSWORD from config.properties", e);
         }
     }
-    private DatabaseConnection() {
+    private PostgresDatabase() {
         // no instances
     }
     public static Connection getConnection() throws SQLException {
