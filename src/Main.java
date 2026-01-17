@@ -1,8 +1,8 @@
-import edu.aitu.oop3.db.PostgresDatabase;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import edu.aitu.oop3.db.PostgresDatabase;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Connecting to Supabase...");
