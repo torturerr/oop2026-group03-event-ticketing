@@ -26,6 +26,7 @@ public class EventRepository {
             throw new RuntimeException("Could not save event!", e);
         }
     }
+
     // get event from the database
     public Event findById(int id) {
         String sql = "SELECT * FROM events WHERE id = ?";
