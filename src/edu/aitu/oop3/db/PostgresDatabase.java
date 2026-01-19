@@ -29,7 +29,6 @@ public class PostgresDatabase implements DatabaseInterface{
             throw new RuntimeException("Cannot load DB_PASSWORD from config.properties", e);
         }
     }
-
     @Override
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, password);

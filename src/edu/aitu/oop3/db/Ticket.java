@@ -13,6 +13,7 @@ public class Ticket {
         this.seatId = seatId;
         this.customerId = customerId;
     }
+
     // for loading from DB (Ticket has id)
     public Ticket(int id, String ticketCode, int eventId, int seatId, int customerId) {
         this.id = id;

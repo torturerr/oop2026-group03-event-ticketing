@@ -24,6 +24,7 @@ public class Event {
         this.status = status;
         this.date = date;
     }
+
     // getters and setters
     public int getId() { return id; }
     public String getEventName() { return eventName; }
