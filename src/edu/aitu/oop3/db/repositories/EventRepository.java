@@ -1,4 +1,7 @@
-package edu.aitu.oop3.db;
+package edu.aitu.oop3.db.repositories;
+
+import edu.aitu.oop3.db.DatabaseInterface;
+import edu.aitu.oop3.db.models.Event;
 import java.sql.*;
 
 public class EventRepository {
@@ -14,7 +17,7 @@ public class EventRepository {
         String sql = "INSERT INTO events(event_name,type,status, event_date) VALUES(?,?,?, ?)";
 
         try(Connection c = db.getConnection();
-        PreparedStatement st = c.prepareStatement(sql)) {
+            PreparedStatement st = c.prepareStatement(sql)) {
 
             st.setString(1, event.getEventName());
             st.setString(2, event.getType().name()); // name() return the enum constant exactly as it is.
@@ -31,7 +34,7 @@ public class EventRepository {
         String sql = "SELECT * FROM events WHERE id = ?";
 
         try(Connection c = db.getConnection();
-        PreparedStatement st = c.prepareStatement(sql)) {
+            PreparedStatement st = c.prepareStatement(sql)) {
 
             st.setInt(1, id);
 

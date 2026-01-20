@@ -1,4 +1,4 @@
-package edu.aitu.oop3.db;
+package edu.aitu.oop3.db.models;
 import java.time.LocalDateTime;
 public class Event {
     private int id; // id is serial in the database
