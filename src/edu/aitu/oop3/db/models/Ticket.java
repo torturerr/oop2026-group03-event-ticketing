@@ -26,4 +26,8 @@ public class Ticket {
     // Getters and Setters
     public int getId() {return id;}
     public String getTicketCode() {return ticketCode;}
+    public int getEventId() {return eventId;}
+    public int getSeatId() {return seatId;}
+    public int getCustomerId() {return customerId;}
+
 }

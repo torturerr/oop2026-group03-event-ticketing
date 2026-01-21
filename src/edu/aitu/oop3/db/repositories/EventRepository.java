@@ -25,6 +25,7 @@ public class EventRepository {
             st.setTimestamp(4, Timestamp.valueOf(event.getDate()));
 
             st.executeUpdate(); // to ensure the update after Insert
+
         } catch (SQLException e) {
             throw new RuntimeException("Could not save event!", e);
         }
