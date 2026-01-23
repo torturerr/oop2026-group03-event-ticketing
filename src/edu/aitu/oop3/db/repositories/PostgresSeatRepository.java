@@ -11,22 +11,45 @@ public class PostgresSeatRepository implements SeatRepository{
     public PostgresSeatRepository(DatabaseInterface db) {
         this.db = db;
     }
+
     @Override
-    public List<Seat> getAllSeats() throws SQLException {
+    public void insert(Seat seat) {
+        String sql = "INSERT INTO seats(row_num, seat_num, event_id) VALUES(?,?,?)";
+
+        try (Connection c = db.getConnection();
+        PreparedStatement stmt = c.prepareStatement(sql)) {
+
+            stmt.setInt(1, seat.getRow());
+            stmt.setInt(2, seat.getNumber());
+            stmt.setInt(3, seat.getEventId());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Could not save seat!",e);
+        }
+    }
+
+    @Override
+    public List<Seat> getAllSeats(int eventId) throws SQLException {
         List<Seat> list = new ArrayList<>();
-        String sql = "SELECT * FROM seats ORDER BY row_num, seat_num";
+        String sql = "SELECT * FROM seats WHERE event_id = ? ORDER BY row_num, seat_num";
         try (Connection conn = db.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                Seat seat = new Seat(
-                        rs.getInt("id"),
-                        rs.getInt("row_num"),
-                        rs.getInt("seat_num")
-                );
-                seat.setBooked(rs.getBoolean("is_booked"));
-                list.add(seat);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, eventId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Seat seat = new Seat(
+                            rs.getInt("id"),
+                            rs.getInt("row_num"),
+                            rs.getInt("seat_num"),
+                            rs.getInt("event_id")
+                    );
+                    seat.setBooked(rs.getBoolean("is_booked"));
+                    list.add(seat);
+                }
             }
+
         }
         return list;
     }
@@ -48,8 +71,7 @@ public class PostgresSeatRepository implements SeatRepository{
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    Seat seat = new Seat(rs.getInt("id"), rs.getInt("row_num"), rs.getInt("seat_num"));
-                    seat.setBooked(rs.getBoolean("is_booked"));
+                    Seat seat = new Seat(rs.getInt("id"), rs.getInt("row_num"), rs.getInt("seat_num"), rs.getBoolean("is_booked"), rs.getInt("event_id"));
                     return seat;
                 }
             }
