@@ -7,10 +7,13 @@ import java.util.UUID;
 
 public class TicketService {
     private final TicketRepository ticketRepository;
-    public TicketService(TicketRepository ticketRepository) {
+    private final SeatAllocationService seatService;
+    public TicketService(TicketRepository ticketRepository, SeatAllocationService seatService) {
         this.ticketRepository = ticketRepository;
+        this.seatService=seatService;
     }
     public void buyTicket(int customerID, int eventID, int seatID){
+        seatService.reserveSeat(seatID);
         try{
             String ticketCode="TIX-"+UUID.randomUUID().toString().substring(0, 8).toUpperCase();
             Ticket ticket=new Ticket(ticketCode, customerID, eventID, seatID);
