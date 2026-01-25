@@ -21,14 +21,15 @@ public class SeatAllocationService {
     }
 
     public void initializeSeats (int eventId, int rows, int seatsPerRow) {
+        System.out.println("Initializing seats for eventId = " + eventId);
         // check if event is null or canceled
         Event event = eventRepository.findById(eventId);
         if (event == null) throw new RuntimeException("Event not found");
         if (event.getStatus() == Event.Status.CANCELLED) throw new EventCancelledException();
-
+        System.out.println("Event found, inserting seats...");
         // Save the seats in the database
         for (int i = 1; i <= rows; i++) { // i saves row number
-            for (int j = 1; j <= seatsPerRow + 1; j++) { // j saves seat number
+            for (int j = 1; j <= seatsPerRow; j++) { // j saves seat number
                 Seat seat = new Seat(i, j, eventId);
                 seatRepository.insert(seat);
             }

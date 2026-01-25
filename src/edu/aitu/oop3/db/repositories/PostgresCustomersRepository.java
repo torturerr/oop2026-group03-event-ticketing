@@ -10,14 +10,26 @@ public class PostgresCustomersRepository implements CustomersRepository{
     public PostgresCustomersRepository(DatabaseInterface db){
         this.db=db;
     }
+
     @Override
-    public void add(Customers customers) throws SQLException {
-        String sql="INSERT INTO customers (name, email) VALUES (?, ?)";
+    public int add(Customers customers) throws SQLException {
+        // save the data in table and return id
+        String sql="INSERT INTO customers (name, email) VALUES (?, ?) RETURNING id";
         try (Connection conn=db.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, customers.getName());
             pstmt.setString(2, customers.getEmail());
-            pstmt.executeUpdate();
+
+            try (ResultSet rs = pstmt.executeQuery()){
+                if (rs.next()){
+                    int id = rs.getInt("id");
+                    customers.setId(id);
+                    return id;
+                }
+                else{
+                    throw new RuntimeException("Failed to retrieve customer ID");
+                }
+            }
         }
     }
     @Override
