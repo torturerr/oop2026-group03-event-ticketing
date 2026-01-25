@@ -7,24 +7,29 @@ import java.util.UUID;
 
 public class TicketService {
     private final TicketRepository ticketRepository;
-    public TicketService(TicketRepository ticketRepository) {
+    private final SeatAllocationService seatService;
+
+    public TicketService(TicketRepository ticketRepository, SeatAllocationService seatService) {
         this.ticketRepository = ticketRepository;
+        this.seatService = seatService;
     }
-    public void buyTicket(int customerID, int eventID, int seatID){
+    public String buyTicket(int customerID, int eventID, int seatID){
+        // check if seat is available
+        seatService.reserveSeat(seatID);
         try{
             String ticketCode="TIX-"+UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-            Ticket ticket=new Ticket(ticketCode, customerID, eventID, seatID);
+            Ticket ticket=new Ticket(ticketCode, eventID, seatID, customerID);
             ticketRepository.save(ticket);
-            System.out.println("Ticket has been purchased, your code: "+ticketCode);
+            return ticketCode;
         }catch(Exception e){
             throw new RuntimeException("Error while purchasing the ticket", e);
         }
     }
-    public void validateTicket(String code) {
+    public Ticket validateTicket(String code) {
         Ticket ticket = ticketRepository.findByCode(code);
         if(ticket == null) {
             throw new InvalidTicketCodeException();
         }
-        System.out.println("The ticket is valid for an event № " + ticket.getEventId());
+        return ticket;
     }
 }

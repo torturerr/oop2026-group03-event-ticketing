@@ -35,7 +35,7 @@ public class PostgresTicketRepository implements TicketRepository {
     // Get ticket from the database
     @Override
     public Ticket findByCode(String code) {
-        String sql = "SELECT * FROM tickets WHERE id = ?";
+        String sql = "SELECT * FROM tickets WHERE ticket_code = ?";
 
         try (Connection c = db.getConnection();
         PreparedStatement st = c.prepareStatement(sql)) {
