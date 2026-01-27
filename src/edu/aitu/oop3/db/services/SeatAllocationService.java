@@ -31,7 +31,8 @@ public class SeatAllocationService {
         for (int i = 1; i <= rows; i++) { // i saves row number
             for (int j = 1; j <= seatsPerRow; j++) { // j saves seat number
                 Seat seat = new Seat(i, j, eventId);
-                seatRepository.insert(seat);
+                int seatId = seatRepository.insert(seat); // save id that comes from the DB
+                seat.setId(seatId);
             }
         }
     }

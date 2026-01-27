@@ -13,8 +13,8 @@ public class PostgresSeatRepository implements SeatRepository{
     }
 
     @Override
-    public void insert(Seat seat) {
-        String sql = "INSERT INTO seats(row_num, seat_num, event_id) VALUES(?,?,?)";
+    public int insert(Seat seat) {
+        String sql = "INSERT INTO seats(row_num, seat_num, event_id) VALUES(?,?,?) RETURNING id";
 
         try (Connection c = db.getConnection();
         PreparedStatement stmt = c.prepareStatement(sql)) {
@@ -23,7 +23,16 @@ public class PostgresSeatRepository implements SeatRepository{
             stmt.setInt(2, seat.getNumber());
             stmt.setInt(3, seat.getEventId());
 
-            stmt.executeUpdate();
+            // no need for stmt.executeUpdate();
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int id = rs.getInt("id");
+                    seat.setId(id);
+                    return id;
+                } else {
+                    throw new RuntimeException("Failed to retrieve seat's id!");
+                }
+            }
 
         } catch (SQLException e) {
             throw new RuntimeException("Could not save seat!",e);

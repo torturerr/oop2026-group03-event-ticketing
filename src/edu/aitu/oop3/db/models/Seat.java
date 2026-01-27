@@ -36,6 +36,7 @@ public class Seat {
     public int getEventId(){return eventId;}
 
     public void setBooked(boolean booked){this.booked=booked;}
+    public void setId(int id){this.id=id;};
     @Override
     public String toString(){
         return "Seat: "+id+"Row: "+row+"Number: "+number+"Booked: "+booked;

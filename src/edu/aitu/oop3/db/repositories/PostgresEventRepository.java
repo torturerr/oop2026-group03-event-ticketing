@@ -29,7 +29,9 @@ public class PostgresEventRepository implements EventRepository {
             // Here: INSERT + get id in ONE step, using executQuery
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("id");
+                    int eventId = rs.getInt("id");
+                    event.setId(eventId);
+                    return eventId;
                 } else {
                     throw new RuntimeException("Failed to retrieve event ID");
                 }
@@ -64,6 +66,34 @@ public class PostgresEventRepository implements EventRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Could not find the event by Id!", e);
+        }
+    }
+    @Override
+    public Event cancelEvent(int EventId) {
+        String sql = "UPDATE events SET status = 'CANCELLED' WHERE id = ?";
+
+        try (Connection c = db.getConnection();
+             PreparedStatement st = c.prepareStatement(sql)) {
+            // prepare the statement
+            st.setInt(1, EventId);
+
+            try (ResultSet rs = st.executeQuery()) {
+                if (!rs.next()) return null;
+                // get type and status
+                String typeStr = rs.getString("type");
+                String statusStr = rs.getString("status");
+                // create the returning event
+                return new Event(
+                        rs.getInt("id"),
+                        rs.getString("event_name"),
+                        Event.Type.valueOf(typeStr),
+                        Event.Status.valueOf(statusStr), // valueOf() converts the string back to enum
+                        rs.getTimestamp("event_date").toLocalDateTime()
+                );
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Could not cancel event!", e);
         }
     }
 }

@@ -18,4 +18,10 @@ public class EventService {
         seatAllocationService.initializeSeats(eventId, rows, seatsPerRow);
         return eventId;
     }
+
+    public Event cancelEvent (int eventId) {
+        Event event = eventRepo.cancelEvent(eventId);
+        event.setStatus(Event.Status.CANCELLED);
+        return event;
+    }
 }
