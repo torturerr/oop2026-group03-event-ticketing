@@ -38,6 +38,7 @@ public class Seat {
     public int getEventId(){return eventId;}
     // Setter to change status (e.g., mark as booked after purchase)
     public void setBooked(boolean booked){this.booked=booked;}
+    public void setId(int id){this.id=id;}
     // Simple text display of seat info
     @Override
     public String toString(){
