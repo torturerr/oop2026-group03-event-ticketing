@@ -85,11 +85,22 @@ public class Main {
 
             // cancel event 1
            try {
-               Event eventCancelledName = eventService.cancelEvent(eventId1);
-               System.out.println("Event: '" + eventCancelledName + "' has been " + eventCancelledName.getStatus());
-           } catch (EventCancelledException canceledEx) {
-               System.out.println("Couldn't cancel event!");
+               Event eventCancelled = eventService.cancelEvent(eventId1);
+               System.out.println("Event: '" + eventCancelled.getEventName() + "' has been " + eventCancelled.getStatus());
+           } catch (Exception e) {
+               System.out.println("Something went wrong! Couldn't cancel event!");
            }
+
+            // print the layout for event 2
+            List<Seat> seats2 = seatService.viewSeatingLayout(eventId2);
+            for  (Seat seat : seats2) {
+                System.out.println(
+                        "ID: " + seat.getId() +
+                                "| Row " + seat.getRow() +
+                                "| Seat " + seat.getNumber() +
+                                " → " + (seat.getBooked() ? "X" : "O")
+                );
+            }
 
         } catch (SQLException e) {
             System.out.println("Error while connecting to database:");

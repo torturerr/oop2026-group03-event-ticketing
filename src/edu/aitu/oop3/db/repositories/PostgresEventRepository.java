@@ -70,12 +70,13 @@ public class PostgresEventRepository implements EventRepository {
     }
     @Override
     public Event cancelEvent(int EventId) {
-        String sql = "UPDATE events SET status = 'CANCELLED' WHERE id = ?";
+        String sql = "UPDATE events SET status = ? WHERE id = ? RETURNING *";
 
         try (Connection c = db.getConnection();
              PreparedStatement st = c.prepareStatement(sql)) {
             // prepare the statement
-            st.setInt(1, EventId);
+            st.setString(1, Event.Status.CANCELLED.name()); // name() converts an enum value to its String name.
+            st.setInt(2, EventId);
 
             try (ResultSet rs = st.executeQuery()) {
                 if (!rs.next()) return null;
@@ -91,7 +92,6 @@ public class PostgresEventRepository implements EventRepository {
                         rs.getTimestamp("event_date").toLocalDateTime()
                 );
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("Could not cancel event!", e);
         }
