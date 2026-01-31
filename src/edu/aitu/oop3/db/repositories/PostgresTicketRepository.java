@@ -15,6 +15,7 @@ public class PostgresTicketRepository implements TicketRepository {
     // save ticket to the database
     @Override
     public void save(Ticket ticket) {
+        // To do: edit: return ID and set ID to the object
         String sql = "INSERT INTO tickets(ticket_code, event_id, seat_id, customer_id) VALUES (?, ?, ?, ?)";
 
         try(Connection c = db.getConnection();
