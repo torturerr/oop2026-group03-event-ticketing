@@ -1,6 +1,7 @@
 package edu.aitu.oop3.db.repositories;
 
 import edu.aitu.oop3.db.DatabaseInterface;
+import edu.aitu.oop3.db.models.Event;
 import edu.aitu.oop3.db.models.Seat;
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class PostgresSeatRepository implements SeatRepository{
     }
 
     @Override
-    public int insert(Seat seat) {
+    public int save(Seat seat) {
         String sql = "INSERT INTO seats(row_num, seat_num, event_id) VALUES(?,?,?) RETURNING id";
 
         try (Connection c = db.getConnection();
@@ -73,7 +74,7 @@ public class PostgresSeatRepository implements SeatRepository{
         }
     }
     @Override
-    public Seat getSeatByID(int id) throws SQLException {
+    public Seat findById(int id) throws SQLException {
         String sql = "SELECT * FROM seats WHERE id = ?";
         try (Connection conn = db.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -86,5 +87,10 @@ public class PostgresSeatRepository implements SeatRepository{
             }
         }
         return null;
+    }
+    //Generic method
+    @Override
+    public java.util.List<Seat> findAll() {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }

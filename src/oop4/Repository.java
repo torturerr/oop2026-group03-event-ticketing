@@ -1,8 +1,9 @@
 package oop4;
+import java.sql.SQLException;
 import java.util.List;
 
 public interface Repository<T> {
-    void save(T entity);
-    T findById(int id);
-    List<T> findALl();
+    int save(T entity) throws SQLException;
+    T findById(int id) throws SQLException;
+    List<T> findAll();
 }

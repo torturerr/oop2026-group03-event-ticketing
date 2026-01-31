@@ -2,6 +2,8 @@ package edu.aitu.oop3.db.repositories;
 
 import edu.aitu.oop3.db.DatabaseInterface;
 import edu.aitu.oop3.db.models.Customers;
+import edu.aitu.oop3.db.models.Event;
+
 import java.sql.*;
 
 
@@ -12,7 +14,7 @@ public class PostgresCustomersRepository implements CustomersRepository{
     }
 
     @Override
-    public int add(Customers customers) throws SQLException {
+    public int save(Customers customers) throws SQLException {
         // save the data in table and return id
         String sql="INSERT INTO customers (name, email) VALUES (?, ?) RETURNING id";
         try (Connection conn=db.getConnection();
@@ -33,7 +35,7 @@ public class PostgresCustomersRepository implements CustomersRepository{
         }
     }
     @Override
-    public Customers getCustomerByID(int id) throws SQLException{
+    public Customers findById(int id) throws SQLException{
         String sql="SELECT * FROM customers WHERE id = ?";
         try (Connection conn=db.getConnection();
              PreparedStatement pstmt=conn.prepareStatement(sql)){
@@ -49,5 +51,10 @@ public class PostgresCustomersRepository implements CustomersRepository{
             }
         }
         return null;
+    }
+    //Generic method
+    @Override
+    public java.util.List<Customers> findAll() {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }

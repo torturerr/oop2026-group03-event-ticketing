@@ -14,7 +14,7 @@ public class PostgresTicketRepository implements TicketRepository {
 
     // save ticket to the database
     @Override
-    public void save(Ticket ticket) {
+    public int save(Ticket ticket) {
         // To do: edit: return ID and set ID to the object
         String sql = "INSERT INTO tickets(ticket_code, event_id, seat_id, customer_id) VALUES (?, ?, ?, ?)";
 
@@ -27,12 +27,11 @@ public class PostgresTicketRepository implements TicketRepository {
             st.setInt(4, ticket.getCustomerId());
 
             st.executeUpdate();
-
+            return 0;
         } catch (SQLException e) {
             throw new RuntimeException("Could not save ticket!", e);
         }
     }
-
     // Get ticket from the database
     @Override
     public Ticket findByCode(String code) {
@@ -58,5 +57,14 @@ public class PostgresTicketRepository implements TicketRepository {
         } catch (SQLException e) {
             throw new RuntimeException("Could not find ticket by the ID!", e);
         }
+    }
+    //Generic methods
+    @Override
+    public Ticket findById(int id) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+    @Override
+    public java.util.List<Ticket> findAll() {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }

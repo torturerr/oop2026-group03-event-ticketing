@@ -1,9 +1,11 @@
 package edu.aitu.oop3.db.repositories;
 
 import edu.aitu.oop3.db.models.Customers;
+import oop4.Repository;
+
 import java.sql.SQLException;
 
-public interface CustomersRepository {
-    int add(Customers customers) throws SQLException;
-    Customers getCustomerByID(int id) throws SQLException;
+public interface CustomersRepository extends Repository<Customers> {
+    int save(Customers customers) throws SQLException;
+    Customers findById(int id) throws SQLException;
 }

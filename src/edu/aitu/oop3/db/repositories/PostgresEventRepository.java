@@ -2,6 +2,8 @@ package edu.aitu.oop3.db.repositories;
 
 import edu.aitu.oop3.db.DatabaseInterface;
 import edu.aitu.oop3.db.models.Event;
+import edu.aitu.oop3.db.models.Ticket;
+
 import java.sql.*;
 
 public class PostgresEventRepository implements EventRepository {
@@ -95,5 +97,10 @@ public class PostgresEventRepository implements EventRepository {
         } catch (SQLException e) {
             throw new RuntimeException("Could not cancel event!", e);
         }
+    }
+    //Generic method
+    @Override
+    public java.util.List<Event> findAll() {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }
