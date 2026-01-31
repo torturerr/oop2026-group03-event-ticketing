@@ -6,6 +6,19 @@ public class Ticket {
     private int eventId;
     private int seatId;
     private int customerId;
+    private Type type;
+    private double price;       // base price
+    private double finalPrice;  // after discount
+
+    public enum Type {
+        STANDARD,
+        STUDENT,
+        VIP
+    }
+
+    // default constructor for the factory
+    public Ticket() {
+    }
 
     public Ticket(String ticketCode, int eventId, int seatId, int customerId) {
         this.ticketCode = ticketCode;
@@ -29,5 +42,16 @@ public class Ticket {
     public int getEventId() {return eventId;}
     public int getSeatId() {return seatId;}
     public int getCustomerId() {return customerId;}
+    public Type getType() {return type;}
+    public double getPrice() {return price;}
+    public double getFinalPrice() {return finalPrice;}
 
+    public void setId(int id) {this.id = id;}
+    public void setTicketCode(String ticketCode) {this.ticketCode = ticketCode;}
+    public void setEventId(int eventId) {this.eventId = eventId;}
+    public void setSeatId(int seatId) {this.seatId = seatId;}
+    public void setCustomerId(int customerId) {this.customerId = customerId;}
+    public void setType(Type type) {this.type = type;}
+    public void setPrice(double price) {this.price = price;}
+    public void setFinalPrice(double finalPrice) {this.finalPrice = finalPrice;}
 }

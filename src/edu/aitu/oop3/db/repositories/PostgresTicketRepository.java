@@ -16,7 +16,7 @@ public class PostgresTicketRepository implements TicketRepository {
     @Override
     public int save(Ticket ticket) {
         // To do: edit: return ID and set ID to the object
-        String sql = "INSERT INTO tickets(ticket_code, event_id, seat_id, customer_id) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO tickets(ticket_code, event_id, seat_id, customer_id) VALUES (?, ?, ?, ?) RETURNING id";
 
         try(Connection c = db.getConnection();
             PreparedStatement st = c.prepareStatement(sql)) {
@@ -26,8 +26,16 @@ public class PostgresTicketRepository implements TicketRepository {
             st.setInt(3, ticket.getSeatId());
             st.setInt(4, ticket.getCustomerId());
 
-            st.executeUpdate();
-            return 0;
+            try (ResultSet rs = st.executeQuery()) {
+                if (rs.next()) {
+                    int id = rs.getInt("id");
+                    ticket.setId(id);
+                    return id;
+                }
+                else {
+                    throw new RuntimeException("Failed to retrieve id from database.");
+                }
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Could not save ticket!", e);
         }

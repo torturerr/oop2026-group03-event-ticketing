@@ -1,8 +1,12 @@
 package edu.aitu.oop3.db.services;
 
 import edu.aitu.oop3.db.exceptions.InvalidTicketCodeException;
+import edu.aitu.oop3.db.models.Event;
 import edu.aitu.oop3.db.models.Ticket;
 import edu.aitu.oop3.db.repositories.TicketRepository;
+import oop4.factory.TicketFactory;
+import oop4.manager.DiscountManager;
+
 import java.util.UUID;
 /**
  * Service class to manage ticket operations.
@@ -18,17 +22,27 @@ public class TicketService {
     }
 
     //Main logic to buy a ticket.
-    public String buyTicket(int customerID, int eventID, int seatID){
+    public String buyTicket(int customerID, int eventID, int seatID, Event.Type eventType, Ticket.Type ticketType){
         // check if seat is available
         seatService.reserveSeat(seatID);
         try{
             //Generate a unique random ticket code
             String ticketCode="TIX-"+UUID.randomUUID().toString().substring(0, 8).toUpperCase();
             //Create a new Ticket object
-            Ticket ticket=new Ticket(ticketCode, eventID, seatID, customerID);
+            //OLD: Ticket ticket=new Ticket(ticketCode, eventID, seatID, customerID);
+            Ticket ticket = TicketFactory.createTicket(eventID,seatID, customerID, eventType, ticketType);
+            ticket.setTicketCode(ticketCode);
+
+            // apply discount using Singleton
+            DiscountManager discountManager = DiscountManager.getInstance();
+            double finalPrice = discountManager.applyDiscount(ticket);
+            ticket.setFinalPrice(finalPrice);
+
             //Save ticket to the Database
             ticketRepository.save(ticket);
+
             return ticketCode;
+
         }catch(Exception e){
             // If something fails, wrap the error and throw it
             throw new RuntimeException("Error while purchasing the ticket", e);

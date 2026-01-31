@@ -7,7 +7,7 @@ public class Event {
     private Status status;
     private LocalDateTime date;
 
-    public enum Type {CONCERT, CINEMA, THEATRE, EDUCATION}
+    public enum Type {CONCERT, CINEMA, THEATER, EDUCATION}
     public enum Status{ACTIVE, CANCELLED, COMPLETED}
 
     // constructors
