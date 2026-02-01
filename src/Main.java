@@ -48,11 +48,11 @@ public class Main {
 
             // create customer 1
             Customers customer1 = new Customers("Dan", "dan.123@gmail.com");
-            int customerId1 = customersRepo.add(customer1); // save the customer in db
+            int customerId1 = customersRepo.save(customer1); // save the customer in db
             System.out.println("customerId returned = " + customerId1);
             // create customer 2
             Customers customer2 = new Customers("Mary", "mary@gmail.com");
-            int customerId2 = customersRepo.add(customer2);
+            int customerId2 = customersRepo.save(customer2);
             System.out.println("customerId returned = " + customerId2);
 
             // print the layout for event 1
@@ -68,13 +68,13 @@ public class Main {
 
             // customer buying ticket
             try {
-                // first customer buying one ticket
-                String ticketCode1 = ticketService.buyTicket(customerId1, eventId1, 2);
+                // first customer buying one VIP ticket
+                String ticketCode1 = ticketService.buyTicket(customerId1, eventId1, 2, event1.getType(), Ticket.Type.VIP);
                 System.out.println("Ticket bought: " + ticketCode1);
-                // second customer buying 2 tickets
-                String ticketCode2 = ticketService.buyTicket(customerId2, eventId2, 5);
+                // second customer buying 2 tickets, one standard and one student
+                String ticketCode2 = ticketService.buyTicket(customerId2, eventId2, 5, event2.getType(), Ticket.Type.STANDARD);
                 System.out.println("Ticket bought: " + ticketCode2);
-                String ticketCode3 = ticketService.buyTicket(customerId2, eventId2, 6);
+                String ticketCode3 = ticketService.buyTicket(customerId2, eventId2, 6,  event2.getType(), Ticket.Type.STUDENT);
                 System.out.println("Ticket bought: " + ticketCode3);
 
             } catch (SeatAlreadyBookedException seatEx) {
