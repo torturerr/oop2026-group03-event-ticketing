@@ -5,7 +5,9 @@ import edu.aitu.oop3.db.repositories.EventRepository;
 import oop4.SearchResult;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EventService {
     private final EventRepository eventRepo; //SOLID: service should depend on the abstraction, not the database implementation
@@ -33,5 +35,13 @@ public class EventService {
         Event event = eventRepo.cancelEvent(eventId);
         event.setStatus(Event.Status.CANCELLED);
         return event;
+    }
+
+    public SearchResult<Event> getSortedByDate(){
+        List<Event> allEvents=eventRepo.findAll();
+        List<Event> sortedEvents=allEvents.stream()
+            .sorted(Comparator.comparing(Event::getDate))
+            .collect(Collectors.toList());
+        return new SearchResult<>(sortedEvents);
     }
 }
