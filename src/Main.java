@@ -12,6 +12,7 @@ import edu.aitu.oop3.db.models.*;
 import edu.aitu.oop3.db.services.*;
 import edu.aitu.oop3.db.repositories.*;
 import edu.aitu.oop3.db.exceptions.*;
+import oop4.builder.EventBuilder;
 
 public class Main {
     public static void main(String[] args) {
@@ -40,7 +41,11 @@ public class Main {
             TicketService ticketService = new TicketService(ticketRepo, seatService);
 
             // create event: event and seats now in DB
-            Event event1 = new Event("Singing Night", Event.Type.CONCERT, LocalDateTime.now().plusDays(1));
+            Event event1 = new EventBuilder("AI Conference", Event.Type.EDUCATION) // create Event using builder
+                    .date(LocalDateTime.of(2026, 2, 10, 10, 0))
+                    .venue("Main Hall")
+                    .totalSeats(100)
+                    .build();
             Event event2 = new Event ("Marvel Movie Night", Event.Type.CINEMA, LocalDateTime.now().plusDays(2));
 
             int eventId1 = eventService.createEvent(event1, 2, 2);

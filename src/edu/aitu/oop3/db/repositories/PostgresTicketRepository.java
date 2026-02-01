@@ -16,7 +16,8 @@ public class PostgresTicketRepository implements TicketRepository {
     @Override
     public int save(Ticket ticket) {
         // To do: edit: return ID and set ID to the object
-        String sql = "INSERT INTO tickets(ticket_code, event_id, seat_id, customer_id) VALUES (?, ?, ?, ?) RETURNING id";
+        String sql = "INSERT INTO tickets (ticket_code, event_id, seat_id, customer_id, type, price, final_price)\n" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id";
 
         try(Connection c = db.getConnection();
             PreparedStatement st = c.prepareStatement(sql)) {
@@ -25,6 +26,9 @@ public class PostgresTicketRepository implements TicketRepository {
             st.setInt(2, ticket.getEventId());
             st.setInt(3, ticket.getSeatId());
             st.setInt(4, ticket.getCustomerId());
+            st.setString(5, ticket.getType().name()); // enum → String
+            st.setDouble(6, ticket.getPrice());
+            st.setDouble(7, ticket.getFinalPrice());
 
             try (ResultSet rs = st.executeQuery()) {
                 if (rs.next()) {
@@ -53,13 +57,19 @@ public class PostgresTicketRepository implements TicketRepository {
             try(ResultSet rs = st.executeQuery()) {
                 if (!rs.next()) return null;
 
-                return new Ticket(
+                Ticket ticket = new Ticket(
                         rs.getInt("id"),
                         rs.getString("ticket_code"),
                         rs.getInt("event_id"),
                         rs.getInt("seat_id"),
                         rs.getInt("customer_id")
                 );
+                // adding the new fields
+                ticket.setType(Ticket.Type.valueOf(rs.getString("type")));
+                ticket.setPrice(rs.getDouble("price"));
+                ticket.setFinalPrice(rs.getDouble("final_price"));
+
+                return ticket;
             }
 
         } catch (SQLException e) {

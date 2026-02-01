@@ -30,10 +30,12 @@ public class TicketService {
             String ticketCode="TIX-"+UUID.randomUUID().toString().substring(0, 8).toUpperCase();
             //Create a new Ticket object
             //OLD: Ticket ticket=new Ticket(ticketCode, eventID, seatID, customerID);
+
+            // factory usage
             Ticket ticket = TicketFactory.createTicket(eventID,seatID, customerID, eventType, ticketType);
             ticket.setTicketCode(ticketCode);
 
-            // apply discount using Singleton
+            // singleton usage: apply discount using Singleton
             DiscountManager discountManager = DiscountManager.getInstance();
             double finalPrice = discountManager.applyDiscount(ticket);
             ticket.setFinalPrice(finalPrice);
