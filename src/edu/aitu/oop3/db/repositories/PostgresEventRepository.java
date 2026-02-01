@@ -5,6 +5,7 @@ import edu.aitu.oop3.db.models.Event;
 import edu.aitu.oop3.db.models.Ticket;
 
 import java.sql.*;
+import java.util.List;
 
 public class PostgresEventRepository implements EventRepository {
     private final DatabaseInterface db;
@@ -101,6 +102,23 @@ public class PostgresEventRepository implements EventRepository {
     //Generic method
     @Override
     public java.util.List<Event> findAll() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        List<Event> list=new java.util.ArrayList<>();
+        String sql = "SELECT * FROM events";
+        try (Connection c = db.getConnection();
+             Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(new Event(
+                        rs.getInt("id"),
+                        rs.getString("event_name"),
+                        Event.Type.valueOf(rs.getString("type")),
+                        Event.Status.valueOf(rs.getString("status")),
+                        rs.getTimestamp("event_date").toLocalDateTime()
+                ));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Could not fetch all events", e);
+        }
+        return list;
     }
 }
