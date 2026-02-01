@@ -23,25 +23,32 @@ public class SeatAllocationService {
     public void initializeSeats (int eventId, int rows, int seatsPerRow) {
         System.out.println("Initializing seats for eventId = " + eventId);
         // check if event is null or canceled
-        Event event = eventRepository.findById(eventId);
-        if (event == null) throw new RuntimeException("Event not found");
-        if (event.getStatus() == Event.Status.CANCELLED) throw new EventCancelledException();
-        System.out.println("Event found, inserting seats...");
-        // Save the seats in the database
-        for (int i = 1; i <= rows; i++) { // i saves row number
-            for (int j = 1; j <= seatsPerRow; j++) { // j saves seat number
-                Seat seat = new Seat(i, j, eventId);
-                int seatId = seatRepository.insert(seat); // save id that comes from the DB
-                seat.setId(seatId);
+        try {
+            Event event = eventRepository.findById(eventId);
+            if (event == null) throw new RuntimeException("Event not found");
+            if (event.getStatus() == Event.Status.CANCELLED) throw new EventCancelledException();
+
+            System.out.println("Event found, inserting seats...");
+            // Save the seats in the database
+            for (int i = 1; i <= rows; i++) { // i saves row number
+                for (int j = 1; j <= seatsPerRow; j++) { // j saves seat number
+                    Seat seat = new Seat(i, j, eventId);
+                    int seatId = seatRepository.save(seat); // save id that comes from the DB
+                    seat.setId(seatId);
+                }
             }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+
     }
 
     public void reserveSeat(int id) {
         //Repositories throw technical exceptions (SQLException)
         //Services convert them into business exceptions (RuntimeException)
         try {
-            Seat seat = seatRepository.getSeatByID(id); // throws SQL Exception
+            Seat seat = seatRepository.findById(id); // throws SQL Exception
 
             if (seat == null) {
                 throw new SeatNotFoundException(id);
@@ -59,6 +66,7 @@ public class SeatAllocationService {
         }
     }
 
+    // edit this to use the Search Result class
     public List<Seat> viewSeatingLayout(int eventId) {
         try {
             return seatRepository.getAllSeats(eventId);
