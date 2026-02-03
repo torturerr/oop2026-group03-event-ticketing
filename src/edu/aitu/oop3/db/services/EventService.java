@@ -37,11 +37,12 @@ public class EventService {
         return event;
     }
 
-    public SearchResult<Event> getSortedByDate(){
-        List<Event> allEvents=eventRepo.findAll();
-        List<Event> sortedEvents=allEvents.stream()
-            .sorted(Comparator.comparing(Event::getDate))
-            .collect(Collectors.toList());
-        return new SearchResult<>(sortedEvents);
+    public SearchResult<Event> getSortedByDate() {
+        List<Event> events = eventRepo.findAll();
+
+        // sort events by date using a lambda expression
+        events.sort(Comparator.comparing(e -> e.getDate()));
+
+        return new SearchResult<>(events);
     }
 }
