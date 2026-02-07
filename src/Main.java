@@ -6,13 +6,25 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import edu.aitu.oop3.db.DatabaseInterface;
-import edu.aitu.oop3.db.PostgresDatabase;
-import edu.aitu.oop3.db.models.*;
-import edu.aitu.oop3.db.services.*;
-import edu.aitu.oop3.db.repositories.*;
-import edu.aitu.oop3.db.exceptions.*;
-import oop4.builder.EventBuilder;
+import eventManagementComponent.modles.Event;
+import eventManagementComponent.modles.Seat;
+import eventManagementComponent.services.EventService;
+import eventManagementComponent.services.SeatAllocationService;
+import exceptions.SeatAlreadyBookedException;
+import infrastructure.database.DatabaseInterface;
+import infrastructure.database.PostgresDatabase;
+import infrastructure.database.PostgresCustomersRepository;
+import infrastructure.database.PostgresEventRepository;
+import infrastructure.database.PostgresSeatRepository;
+import infrastructure.database.PostgresTicketRepository;
+import models.Customers;
+import repositories.CustomersRepository;
+import repositories.EventRepository;
+import repositories.SeatRepository;
+import repositories.TicketRepository;
+import ticketSalesComponent.modle.Ticket;
+import eventManagementComponent.builder.EventBuilder;
+import ticketSalesComponent.services.TicketService;
 
 public class Main {
     public static void main(String[] args) {
