@@ -11,10 +11,28 @@ public class Ticket {
     private double finalPrice;  // after discount
 
     public enum Type {
-        STANDARD,
-        STUDENT,
-        VIP
+        VIP {
+            @Override
+            public double multiplier() {
+                return 1.6;
+            }
+        },
+        STUDENT {
+            @Override
+            public double multiplier() {
+                return 1.0;
+            }
+        },
+        STANDARD {
+            @Override
+            public double multiplier() {
+                return 1.0;
+            }
+        };
+        // method inside enum type
+        public abstract double multiplier();
     }
+
 
     // default constructor for the factory
     public Ticket() {

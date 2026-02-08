@@ -13,7 +13,8 @@ public class TicketFactory {
         ticket.setType(ticketType);
 
         double basePrice = basePriceForEventType(eventType);
-        double multiplier = multiplierForTicketType(ticketType);
+        // here use the multiplier method instead of switch case statements
+        double multiplier = ticketType.multiplier();
         ticket.setPrice(basePrice * multiplier);
         ticket.setFinalPrice(basePrice * multiplier); // discount later
 
@@ -30,7 +31,9 @@ public class TicketFactory {
         }
     }
 
-    private static double  multiplierForTicketType(Ticket.Type ticketType) {
+    // old version
+
+    /*private static double  multiplierForTicketType(Ticket.Type ticketType) {
         if (ticketType == null) return 1.0;
         switch (ticketType) {
             case VIP: return 1.6; // Vip cost more than the others
@@ -38,5 +41,5 @@ public class TicketFactory {
             case STANDARD: return 1.0;
             default: return 1.0;
         }
-    }
+    }*/
 }
